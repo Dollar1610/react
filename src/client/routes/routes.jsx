@@ -5,18 +5,18 @@ import history from './history';
 
 import MenuApp from '../menu-app/appmenu';
 
-import Customers from '../customers/customers.jsx';
-import InvoiceList from '../invoice/invoice-list.jsx';
-import Products from '../products/products.jsx'
+import customers from '../customers/customers.jsx';
+import invoiceList from '../invoice/invoice-list.jsx';
+import products from '../products/products.jsx'
 
 export const renderRoutes = () => (
 	<Router history={history}>
 	  <div>
 	    <MenuApp />
-	    <div class="container-fluid">
-         <Route path="/customers" component={Customers}/>
-         <Route path="/products" component={Products}/>
-         <Route exact={true} path="/invoices" component={InvoiceList}/>
+	    <div className="container-fluid">
+         <Route path="/customers" component={customers}/>
+         <Route path="/products" component={products}/>
+         <Route exact={true} path="/invoices" component={invoiceList}/>
 	    </div>
 	  </div>
 	</Router>

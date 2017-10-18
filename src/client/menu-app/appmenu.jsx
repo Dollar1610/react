@@ -1,40 +1,41 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
 
-import history from '../routes/history.js';
-import './nav.scss';
+import './nav.css';
+import '../../../public/bootstrap/css/bootstrap.min.css';
+import { Navbar, NavItem, Nav} from "react-bootstrap";
+import {IndexLinkContainer, LinkContainer} from 'react-router-bootstrap';
 
 export default class MenuApp extends Component {
-  constructor(props) {
-  	super(props);
-  	
-  }
 
   render() {
   	return (
       <header>
-        <nav className="navbar navbar-default">
-          <div className="container-fluid">
-            <ul className="nav nav-bar">
-              <li>
-                <NavLink exact to="invoices">
-                  Invoices
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="products">
-                  Products
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="customers">
-                  Customers
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        </nav>  
+          <Navbar>
+              <Navbar.Header>
+                  <Navbar.Brand>
+                      <a href="#">Invoice App</a>
+                  </Navbar.Brand>
+              </Navbar.Header>
+              <Nav>
+                  <IndexLinkContainer  to="/invoices" activeClassName="active">
+                      <NavItem eventKey={1} href="#">
+                          Invoices
+                      </NavItem>
+                  </IndexLinkContainer>
+                  <LinkContainer to="/products" activeClassName="active">
+                       <NavItem eventKey={2} href="#">
+                          Products
+                       </NavItem>
+                  </LinkContainer>
+                  <LinkContainer to="/customers" activeClassName="active">
+                       <NavItem eventKey={2} href="#">
+                          Customers
+                       </NavItem>
+                  </LinkContainer>
+              </Nav>
+          </Navbar>
       </header>
   );
- };
-};
+ }
+}
+
