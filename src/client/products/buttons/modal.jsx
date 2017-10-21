@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
+
 export default class Modals extends Component {
     constructor(props) {
         super(props);
@@ -20,23 +21,36 @@ export default class Modals extends Component {
         this.setState({ showModal: true });
     }
     save() {
-        let name = document.getElementById('name').value;
-        let price = document.getElementById('price').value;
-        let formData = new FormData(document.getElementsByName('form1'));
-        console.log(formData);
+        let content = {
+            id: oForm.elements[0].value,
+            name: oForm.elements[1].value,
+            price: oForm.elements[2].value
+        };
 
-        console.log(price);
-        let urll = 'http://localhost:8000/submit?name='+encodeURIComponent(name)+'&price='+encodeURIComponent(price);
-        console.log(urll);
-        fetch(urll, {
+        function getRequestBody(oForm) {
+            let aParams = [];
+            for(let i = 0; i < oForm.elements.length; i++) {
+                let sParam = encodeURIComponent(oForm.getElementsByTagName('label')[i].innerHTML);
+                sParam += "=";
+                sParam += encodeURIComponent(oForm.elements[i].value);
+                aParams.push(sParam);
+            }
+            return '/api/products?' + aParams.join("&");
+        }
+        let url1 = getRequestBody(document.forms.form1);
+        console.log('url='+url1);
+        let modal_div = document.getElementsByClassName('modal-body')[0];
+        modal_div.insertAdjacentHTML('beforeend', '<div id="dd"></div>');
+        fetch(url1, {
             method: 'post',
             headers: {
                 "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
-            },
-            body: formData
+            }
         }).then(function(response) {
-            console.log(response.url);
-        });
+            document.getElementById('dd').innerHTML=response.json();
+        }).catch(function (err) {
+            console.log(err)
+        })
         }
 
     render() {
@@ -54,19 +68,19 @@ export default class Modals extends Component {
                         <Modal.Title>Add Products</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                       <form className="form-inline" name="form1">
-                           <div className="form-group" style={{marginRight:30+'px'}}>
-                               <label htmlFor="name">Name</label>
-                               <input type="text" className="form-control" id="name" />
-                           </div>
-                           <div className="form-group">
-                               <label htmlFor="price">Price</label>
-                               <input type="text" className="form-control" id="price"/>
-                           </div>
-                       </form>
+                        <form className="form-inline" name="form1">
+                            <div className="form-group" style={{marginRight:30+'px'}}>
+                                <label htmlFor="name">Name</label>
+                                <input type="text" className="form-control" id="name" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="price">Price</label>
+                                <input type="text" className="form-control" id="price"/>
+                            </div>
+                        </form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button bsStyle="success" onClick={this.save} type="submit">Save</Button>
+                        <Button bsStyle="primary" onClick={this.save} type="submit">Save</Button>
                         <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                 </Modal>
