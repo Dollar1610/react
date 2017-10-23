@@ -1,10 +1,57 @@
 import React, { Component } from 'react';
 import '../../../public/bootstrap/css/bootstrap.min.css';
-import { PageHeader, Table } from 'react-bootstrap';
-//import ButtonsGroup from './buttons/buttons';
+import { PageHeader, Table, Button} from 'react-bootstrap';
 import Modals from './buttons/modal';
 
+
 export default class Products extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: '',
+            name: '',
+            price: ''
+        };
+        this.save = this.save.bind(this);
+        this.delete = this.delete.bind(this);
+    }
+    componentDidMount() {
+        this.save();
+    }
+    delete() {
+        const urll = '/api/products/{id}';
+        fetch(urll, {
+            method: 'delete'
+        });
+    }
+    save() {
+        let tdata = [];
+        const urll = 'api/products';
+        let tbody = document.querySelector('.table tbody');
+        fetch(urll).then((response) => {
+            response.json().then((data) => {
+                for (let i=0; i<data.length; i++) {
+                    this.setState({
+                        id: data[i].id,
+                        name: data[i].name,
+                        price: data[i].price
+                    });
+                    tbody.insertAdjacentHTML('beforeend',
+                        '<tr>'
+                              +'<td>'+this.state.id+'</td>'
+                              +'<td>'+this.state.name+'</td>'
+                              +'<td>'+this.state.price+'</td>'
+                              +'<td>'+'<Button bsStyle=Link onclick="this.delete">Delete</Button>'+'</td>'+
+                        '</tr>'
+                    )
+                }
+                tdata = data.slice(0);
+                console.log(data);
+                console.log(tdata);
+            })
+        });
+        console.log(tdata);
+    }
     render () {
         return (
             <div>
@@ -22,16 +69,7 @@ export default class Products extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Parachute Pants</td>
-                            <td>29.99</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Phone Holder</td>
-                            <td>9.99</td>
-                        </tr>
+
                         </tbody>
                     </Table>
                 </div>

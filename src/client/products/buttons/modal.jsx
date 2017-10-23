@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-
+import getUrl from '../../../getUrl.jsx';
 
 export default class Modals extends Component {
     constructor(props) {
@@ -21,36 +21,25 @@ export default class Modals extends Component {
         this.setState({ showModal: true });
     }
     save() {
+        let count = 2;
         let content = {
-            id: oForm.elements[0].value,
-            name: oForm.elements[1].value,
-            price: oForm.elements[2].value
+            name: document.getElementById('name').value,
+            price: document.getElementById('price').value
         };
-
-        function getRequestBody(oForm) {
-            let aParams = [];
-            for(let i = 0; i < oForm.elements.length; i++) {
-                let sParam = encodeURIComponent(oForm.getElementsByTagName('label')[i].innerHTML);
-                sParam += "=";
-                sParam += encodeURIComponent(oForm.elements[i].value);
-                aParams.push(sParam);
-            }
-            return '/api/products?' + aParams.join("&");
-        }
-        let url1 = getRequestBody(document.forms.form1);
-        console.log('url='+url1);
-        let modal_div = document.getElementsByClassName('modal-body')[0];
-        modal_div.insertAdjacentHTML('beforeend', '<div id="dd"></div>');
-        fetch(url1, {
+        const urll=getUrl('api/products?', content);
+        console.log(content);
+        fetch(urll, {
             method: 'post',
             headers: {
                 "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
             }
         }).then(function(response) {
-            document.getElementById('dd').innerHTML=response.json();
-        }).catch(function (err) {
+            response.json().then(function(data) {
+                console.log(data);
+            })
+        }).catch(function(err) {
             console.log(err)
-        })
+        });
         }
 
     render() {
