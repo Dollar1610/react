@@ -21,19 +21,23 @@ export default class Modals extends Component {
         this.setState({ showModal: true });
     }
     save() {
-        let count = 2;
+        let count = 1;
         let content = {
+            id: count,
             name: document.getElementById('name').value,
             price: document.getElementById('price').value
         };
         const urll=getUrl('api/products?', content);
+        console.log(urll);
         console.log(content);
         fetch(urll, {
             method: 'post',
             headers: {
-                "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+                "Content-type": "application/json"
             }
         }).then(function(response) {
+            console.log('response = '+response.status);
+            console.log(response.headers.get('Content-Type'));
             response.json().then(function(data) {
                 console.log(data);
             })
