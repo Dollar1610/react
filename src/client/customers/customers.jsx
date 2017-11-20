@@ -20,20 +20,6 @@ export default class Customer extends Component {
                           <th>phone</th>
                       </tr>
                       </thead>
-                      <tbody>
-                      <tr>
-                          <td>1</td>
-                          <td>Mark Benson</td>
-                          <td>353 Rochester St, Rialto FL 43250</td>
-                          <td>555-534-2342</td>
-                      </tr>
-                      <tr>
-                          <td>2</td>
-                          <td>Bob Smith</td>
-                          <td>215 Market St, Dansville CA 94325</td>
-                          <td>555-534-2342</td>
-                      </tr>
-                      </tbody>
                   </Table>
               </div>
           </div>

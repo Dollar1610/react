@@ -25,9 +25,13 @@ export default class Modals extends Component {
             name: document.getElementById('name').value,
             price: document.getElementById('price').value
         };
+        if (content.name==='') {
+            if (content.price==='') {
+                alert('hi');
+                return null;
+            }
+        }
         const urll=getUrl('',content);
-        console.log(urll);
-        console.log(content);
         fetch('api/products?', {
             method: 'post',
             headers: {
@@ -35,8 +39,6 @@ export default class Modals extends Component {
             },
             body: urll
         }).then(function(response) {
-            console.log('response = '+response.status);
-            console.log(response.headers.get('Content-Type'));
             response.json().then(function(data) {
                 console.log(data);
             })
@@ -57,7 +59,7 @@ export default class Modals extends Component {
 
                 <Modal show={this.state.showModal} onHide={this.close}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Add Products</Modal.Title>
+                        <Modal.Title>Add products</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <form className="form-inline" name="form1">

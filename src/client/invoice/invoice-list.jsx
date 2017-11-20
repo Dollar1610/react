@@ -22,22 +22,6 @@ export default class Invoice extends Component {
                         <th> </th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td>edit</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Mark Benson</td>
-                        <td>1</td>
-                        <td> </td>
-                        <td>edit</td>
-                    </tr>
-                    </tbody>
                 </Table>
             </div>
             </div>

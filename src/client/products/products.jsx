@@ -2,57 +2,57 @@ import React, { Component } from 'react';
 import '../../../public/bootstrap/css/bootstrap.min.css';
 import { PageHeader, Table, Button} from 'react-bootstrap';
 import Modals from './buttons/modal';
-
+import Product_list from './product_container';
+import getRequest from './../../getRequest';
 
 export default class Products extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
-            name: '',
-            price: ''
+            prod_list : []
         };
-        this.save = this.save.bind(this);
-        this.delete = this.delete.bind(this);
+        this.delete_prod = this.delete_prod.bind(this);
     }
-    componentDidMount() {
-        this.save();
-    }
-    delete() {
+    delete_prod() {
         const urll = '/api/products/{id}';
         fetch(urll, {
             method: 'delete'
         });
     }
-    save() {
-        let tdata = [];
-        const urll = 'api/products';
-        let tbody = document.querySelector('.table tbody');
-        fetch(urll).then((response) => {
-            response.json().then((data) => {
-                for (let i=0; i<data.length; i++) {
-                    this.setState({
-                        id: data[i].id,
-                        name: data[i].name,
-                        price: data[i].price
-                    });
-                    tbody.insertAdjacentHTML('beforeend',
-                        '<tr>'
-                              +'<td>'+this.state.id+'</td>'
-                              +'<td>'+this.state.name+'</td>'
-                              +'<td>'+this.state.price+'</td>'
-                              +'<td>'+'<Button bsStyle=Link onclick="this.delete">Delete</Button>'+'</td>'+
-                        '</tr>'
-                    )
-                }
-                tdata = data.slice(0);
-                console.log(data);
-                console.log(tdata);
-            })
-        });
-        console.log(tdata);
-    }
+
     render () {
+        if (this.state.prod_list.length === 0) {
+            const prod = this.state.prod_list;
+            const urll = 'api/products';
+            fetch(urll).then((response) => {
+                response.json().then((data) => {
+                    for (let i = 0; i < data.length; i++) {
+                        prod.push({
+                            id: data[i].id,
+                            name: data[i].name,
+                            price: data[i].price
+                        });
+                    }
+                    this.setState({prod_list: prod});
+                })
+            });
+        }
+        else {
+            const prod = this.state.prod_list;
+            const urll = 'api/products';
+            fetch(urll).then((response) => {
+                response.json().then((data) => {
+                    if (data.length !== this.state.prod_list.length) {
+                        prod.push({
+                            id: data[length - 1].id,
+                            name: data[length - 1].name,
+                            price: data[length - 1].price
+                        });
+                        this.setState({prod_list: prod});
+                    }
+                })
+            })
+        }
         return (
             <div>
                 <div className='container'>
@@ -66,11 +66,10 @@ export default class Products extends Component {
                             <th>#</th>
                             <th>Name</th>
                             <th>Price</th>
+                            <th>Options</th>
                         </tr>
                         </thead>
-                        <tbody>
-
-                        </tbody>
+                        <Product_list data = {this.state.prod_list}/>
                     </Table>
                 </div>
             </div>
