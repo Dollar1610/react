@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import getUrl from './../../getUrl';
 
 export default class ModalDelete extends Component {
     constructor(props) {
@@ -27,6 +26,8 @@ export default class ModalDelete extends Component {
                 headers: {
                     "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
                 }
+            }).then((response) => {
+                if (response.status === 200) this.setState({ showModal: false });
             })
     }
     close() {

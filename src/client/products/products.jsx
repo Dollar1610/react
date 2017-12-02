@@ -3,7 +3,6 @@ import '../../../public/bootstrap/css/bootstrap.min.css';
 import { PageHeader, Table, Button} from 'react-bootstrap';
 import Modals from './buttons/modal';
 import Product_list from './product_container';
-import getRequest from './../../getRequest';
 
 export default class Products extends Component {
     constructor(props) {
@@ -12,6 +11,7 @@ export default class Products extends Component {
             prod_list : []
         };
         this.delete_prod = this.delete_prod.bind(this);
+        this.content = this.content.bind(this);
     }
     delete_prod() {
         const urll = '/api/products/{id}';
@@ -19,13 +19,14 @@ export default class Products extends Component {
             method: 'delete'
         });
     }
-
-    render () {
+    content() {
         if (this.state.prod_list.length === 0) {
             const prod = this.state.prod_list;
             const urll = 'api/products';
-            fetch(urll).then((response) => {
-                response.json().then((data) => {
+            fetch(urll)
+                .then((response) => {
+                response.json()
+                    .then((data) => {
                     for (let i = 0; i < data.length; i++) {
                         prod.push({
                             id: data[i].id,
@@ -40,8 +41,10 @@ export default class Products extends Component {
         else {
             const prod = this.state.prod_list;
             const urll = 'api/products';
-            fetch(urll).then((response) => {
-                response.json().then((data) => {
+            fetch(urll)
+                .then((response) => {
+                response.json()
+                    .then((data) => {
                     if (data.length !== this.state.prod_list.length) {
                         prod.push({
                             id: data[length - 1].id,
@@ -53,12 +56,18 @@ export default class Products extends Component {
                 })
             })
         }
+    }
+    componentDidMount() {
+        this.content();
+    };
+    render () {
+
         return (
             <div>
                 <div className='container'>
                     <PageHeader className="hd">
                         Product list
-                        <Modals/>
+                        <Modals content={() => this.content()} />
                     </PageHeader>
                     <Table responsive>
                         <thead>
@@ -69,10 +78,11 @@ export default class Products extends Component {
                             <th>Options</th>
                         </tr>
                         </thead>
-                        <Product_list data = {this.state.prod_list}/>
+                        <Product_list  data = {this.state.prod_list}/>
                     </Table>
                 </div>
             </div>
         )
     }
 }
+console.log(Products);

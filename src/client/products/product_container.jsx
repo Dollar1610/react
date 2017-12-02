@@ -4,11 +4,11 @@ import ModalDelete from './modal_delete';
 
 export default function (props) {
     let products = props.data;
-    let list_products = products.map((product) => {
+    let listProducts = products.map((product) => {
       return  <tr data-id={product.id} key={product.id}>{transform(product)}</tr>
 });
 return (
-    <tbody>{list_products}</tbody>
+    <tbody>{listProducts}</tbody>
 );
 }
 

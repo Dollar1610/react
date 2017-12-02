@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Alert } from 'react-bootstrap';
 import getUrl from '../../../getUrl.jsx';
 
 export default class Modals extends Component {
@@ -8,6 +8,7 @@ export default class Modals extends Component {
 
         this.state = {
             showModal: false,
+            warning: 'none'
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -19,17 +20,16 @@ export default class Modals extends Component {
 
     open() {
         this.setState({ showModal: true });
+        console.log(this.props.content);
     }
     save() {
         let content = {
             name: document.getElementById('name').value,
             price: document.getElementById('price').value
         };
-        if (content.name==='') {
-            if (content.price==='') {
+        if ((content.name==='')&&(content.price==='')) {
                 alert('hi');
                 return null;
-            }
         }
         const urll=getUrl('',content);
         fetch('api/products?', {
@@ -38,13 +38,14 @@ export default class Modals extends Component {
                 "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
             },
             body: urll
-        }).then(function(response) {
-            response.json().then(function(data) {
-                console.log(data);
-            })
+        }).then((response) => {
+            if (response.status === 200) {
+                this.setState({ showModal: false });
+            }
         }).catch(function(err) {
-            console.log(err)
+            if (err) this.setState({ warning: 'block' })
         });
+
         }
 
     render() {
@@ -72,6 +73,10 @@ export default class Modals extends Component {
                                 <input type="text" className="form-control" id="price"/>
                             </div>
                         </form>
+                        <Alert style={{display: this.state.warning}} bsStyle="danger">
+                            <h4>Oh snap! You got an error!</h4>
+                            <p>try again</p>
+                        </Alert>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button bsStyle="primary" onClick={this.save} type="submit">Save</Button>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Alert } from 'react-bootstrap';
 import getUrl from './../../getUrl';
+import Products from "./products";
 
 export default class ModalEdit extends Component{
     constructor(props) {
@@ -12,12 +13,14 @@ export default class ModalEdit extends Component{
                 id:'',
                 name:'',
                 price:''
-            }
+            },
+            warning: 'none'
         };
-        console.log(props.id);
+       // let a=this.refs.child.content();
+       // console.log(a);
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
-        this.save = this.save.bind(this);
+      //  this.save = this.save.bind(this);
         this.deleteProd = this.deleteProd.bind(this);
     }
 
@@ -26,12 +29,9 @@ export default class ModalEdit extends Component{
             name: document.getElementById('name').value,
             price: document.getElementById('price').value
         };
-        console.log(content);
-        if (content.name==='') {
-            if (content.price==='') {
-                alert('hi');
-                return null;
-            }
+        if ((content.name==='')&&(content.price==='')) {
+            alert('hi');
+            return null;
         }
         const urll=getUrl('',content);
         let id = this.state.prodSetting.id;
@@ -45,17 +45,16 @@ export default class ModalEdit extends Component{
         })
     }
 
-    save() {
+    save(e) {
+        e.preventDefault();
         let content = {
             name: document.getElementById('name').value,
             price: document.getElementById('price').value
         };
         console.log(content);
-        if (content.name==='') {
-            if (content.price==='') {
-                alert('hi');
-                return null;
-            }
+        if ((content.name==='')&&(content.price==='')) {
+            alert('hi');
+            return null;
         }
         const urll=getUrl('',content);
         let id = this.state.prodSetting.id;
@@ -66,7 +65,14 @@ export default class ModalEdit extends Component{
                 "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
             },
             body: urll
-        })
+        }).then((response) => {
+            if (response.status === 200) {
+                this.setState({ showModal: false });
+                this.props.content();
+            }
+        }).catch(function(err) {
+          //  if (err) this.setState({ warning: 'block' })
+        });
     }
 
     close() {
@@ -104,16 +110,20 @@ export default class ModalEdit extends Component{
                         <form className="form-inline" name="form1">
                             <div className="form-group" style={{marginRight:30+'px'}}>
                                 <label htmlFor="name">Name</label>
-                                <input placeholder={this.state.prodSetting.name} type="text" className="form-control" id="name" />
+                                <input defaultValue={this.state.prodSetting.name} type="text" className="form-control" id="name" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="price">Price</label>
-                                <input placeholder={this.state.prodSetting.price} type="text" className="form-control" id="price"/>
+                                <input defaultValue={this.state.prodSetting.price} type="text" className="form-control" id="price"/>
                             </div>
                         </form>
+                        <Alert style={{display: this.state.warning}} bsStyle="danger">
+                            <h4>Oh snap! You got an error!</h4>
+                            <p>try again</p>
+                        </Alert>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button bsStyle="primary" onClick={this.save} type="submit">Save</Button>
+                        <Button bsStyle="primary" onClick={(e) => this.save(e)} type="submit">Save</Button>
                         <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                 </Modal>
