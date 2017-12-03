@@ -27,8 +27,8 @@ export default class Modals extends Component {
             price: document.getElementById('price').value
         };
         if ((content.name==='')&&(content.price==='')) {
-                alert('hi');
-                return null;
+            alert('hi');
+            return null;
         }
         const urll=getUrl('',content);
         fetch('api/products?', {
@@ -46,7 +46,7 @@ export default class Modals extends Component {
             if (err) this.setState({ warning: 'block' })
         });
 
-        }
+    }
 
     render() {
         return (
