@@ -20,7 +20,6 @@ export default class Modals extends Component {
 
     open() {
         this.setState({ showModal: true });
-        console.log(this.props.content);
     }
     save() {
         let content = {
@@ -40,7 +39,8 @@ export default class Modals extends Component {
             body: urll
         }).then((response) => {
             if (response.status === 200) {
-                this.setState({ showModal: false });
+                this.close();
+                this.props.loadData();
             }
         }).catch(function(err) {
             if (err) this.setState({ warning: 'block' })

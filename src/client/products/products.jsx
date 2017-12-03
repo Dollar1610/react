@@ -8,66 +8,50 @@ export default class Products extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            prod_list : []
+            prodList : []
         };
         this.delete_prod = this.delete_prod.bind(this);
-        this.content = this.content.bind(this);
+        this.loadData = this.loadData.bind(this);
     }
+
+    componentWillMount() {
+        this.loadData();
+    }
+
     delete_prod() {
         const urll = '/api/products/{id}';
         fetch(urll, {
             method: 'delete'
         });
     }
-    content() {
-        if (this.state.prod_list.length === 0) {
-            const prod = this.state.prod_list;
-            const urll = 'api/products';
-            fetch(urll)
-                .then((response) => {
-                response.json()
-                    .then((data) => {
-                    for (let i = 0; i < data.length; i++) {
-                        prod.push({
-                            id: data[i].id,
-                            name: data[i].name,
-                            price: data[i].price
-                        });
-                    }
-                    this.setState({prod_list: prod});
-                })
-            });
-        }
-        else {
-            const prod = this.state.prod_list;
-            const urll = 'api/products';
-            fetch(urll)
-                .then((response) => {
-                response.json()
-                    .then((data) => {
-                    if (data.length !== this.state.prod_list.length) {
-                        prod.push({
-                            id: data[length - 1].id,
-                            name: data[length - 1].name,
-                            price: data[length - 1].price
-                        });
-                        this.setState({prod_list: prod});
-                    }
-                })
-            })
-        }
-    }
-    componentDidMount() {
-        this.content();
-    };
-    render () {
 
+    loadData() {
+      const prodList = [];
+      const urll = 'api/products';
+
+      fetch(urll)
+          .then((response) => {
+          response.json()
+              .then((data) => {
+              for (let i = 0; i < data.length; i++) {
+                  prodList.push({
+                      id: data[i].id,
+                      name: data[i].name,
+                      price: data[i].price
+                  });
+              }
+              this.setState({ prodList });
+          })
+      });
+    }
+
+    render () {
         return (
             <div>
                 <div className='container'>
                     <PageHeader className="hd">
                         Product list
-                        <Modals content={() => this.content()} />
+                        <Modals loadData={this.loadData} />
                     </PageHeader>
                     <Table responsive>
                         <thead>
@@ -78,7 +62,7 @@ export default class Products extends Component {
                             <th>Options</th>
                         </tr>
                         </thead>
-                        <Product_list  data = {this.state.prod_list}/>
+                        <Product_list  data = {this.state.prodList}/>
                     </Table>
                 </div>
             </div>
