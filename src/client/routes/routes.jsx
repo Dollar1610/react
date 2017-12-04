@@ -16,7 +16,7 @@ export const renderRoutes = () => (
 	    <div className="container-fluid">
          <Route path="/customers" component={customers}/>
          <Route path="/products" component={products}/>
-         <Route exact={true} path="/invoices" component={invoiceList}/>
+         <Route exact={true} path="/invoiceList" component={invoiceList}/>
 	    </div>
 	  </div>
 	</Router>

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import '../../../public/bootstrap/css/bootstrap.min.css';
-import { PageHeader, Table, Button} from 'react-bootstrap';
-import Modals from './buttons/modal';
-import Product_list from './product_container';
+import { PageHeader, Table} from 'react-bootstrap';
+import ModalCreate from './modals/modal_create';
+import ProductList from './loadData/product_container';
 
 export default class Products extends Component {
     constructor(props) {
@@ -44,7 +44,7 @@ export default class Products extends Component {
                 <div className='container'>
                     <PageHeader className="hd">
                         Product list
-                        <Modals loadData={this.loadData} />
+                        <ModalCreate loadData={this.loadData} />
                     </PageHeader>
                     <Table responsive>
                         <thead>
@@ -55,7 +55,7 @@ export default class Products extends Component {
                             <th>Options</th>
                         </tr>
                         </thead>
-                        <Product_list  data = {this.state.prodList}/>
+                        <ProductList loadData={this.loadData} data = {this.state.prodList}/>
                     </Table>
                 </div>
             </div>

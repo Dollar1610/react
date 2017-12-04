@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Modal, Alert } from 'react-bootstrap';
-import getUrl from '../../../getUrl.jsx';
+import getUrl from '../../common/getUrl';
 
-export default class Modals extends Component {
+export default class ModalCreate extends Component {
     constructor(props) {
         super(props);
 

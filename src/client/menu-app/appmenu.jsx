@@ -17,7 +17,7 @@ export default class MenuApp extends Component {
                   </Navbar.Brand>
               </Navbar.Header>
               <Nav>
-                  <IndexLinkContainer  to="/invoices" activeClassName="active">
+                  <IndexLinkContainer  to="/invoiceList" activeClassName="active">
                       <NavItem eventKey={1} href="#">
                           Invoices
                       </NavItem>

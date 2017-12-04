@@ -20,14 +20,16 @@ export default class ModalDelete extends Component {
 
     deleteProd() {
             let id = this.state.prodSetting.id;
-            console.log(id);
-            fetch('api/products/'+id, {
+            fetch('/api/products/'+id, {
                 method: 'delete',
                 headers: {
                     "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
                 }
             }).then((response) => {
-                if (response.status === 200) this.setState({ showModal: false });
+                if (response.status === 200) {
+                    this.setState({ showModal: false });
+                    this.props.loadData();
+                }
             })
     }
     close() {
@@ -39,7 +41,6 @@ export default class ModalDelete extends Component {
             .then((response) =>{
                 response.json()
                     .then((data) =>{
-                        console.log(data);
                         this.setState({
                             showModal: true,
                             prodSetting: {
@@ -47,8 +48,7 @@ export default class ModalDelete extends Component {
                                 name: data.name,
                                 price: data.price
                             }
-                        });
-                        console.log(this.state);
+                        })
                     })
             })
     }

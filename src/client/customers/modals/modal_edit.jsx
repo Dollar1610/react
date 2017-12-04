@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal, Alert } from 'react-bootstrap';
-import getUrl from './../../getUrl';
-import Products from "./products";
+import getUrl from './../../common/getUrl';
 
 export default class ModalEdit extends Component{
     constructor(props) {
@@ -9,34 +8,29 @@ export default class ModalEdit extends Component{
 
         this.state = {
             showModal: false,
-            prodSetting: {
+            customerSetting: {
                 id:'',
                 name:'',
-                price:''
+                address:'',
+                phone:''
             },
             warning: 'none'
         };
-       // let a=this.refs.child.content();
-       // console.log(a);
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
-      //  this.save = this.save.bind(this);
         this.deleteProd = this.deleteProd.bind(this);
     }
 
     deleteProd() {
         let content = {
             name: document.getElementById('name').value,
-            price: document.getElementById('price').value
+            address: document.getElementById('address').value,
+            phone: document.getElementById('phone').value,
         };
-        if ((content.name==='')&&(content.price==='')) {
-            alert('hi');
-            return null;
-        }
+        if ((content.name==='')&&(content.address==='')&&(content.phone==='')) return null;
         const urll=getUrl('',content);
-        let id = this.state.prodSetting.id;
-        console.log(id);
-        fetch('api/products/'+id, {
+        let id = this.state.customerSetting.id;
+        fetch('api/customers/'+id, {
             method: 'delete',
             headers: {
                 "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
@@ -49,17 +43,13 @@ export default class ModalEdit extends Component{
         e.preventDefault();
         let content = {
             name: document.getElementById('name').value,
-            price: document.getElementById('price').value
+            address: document.getElementById('address').value,
+            phone: document.getElementById('phone').value,
         };
-        console.log(content);
-        if ((content.name==='')&&(content.price==='')) {
-            alert('hi');
-            return null;
-        }
+        if ((content.name==='')&&(content.address==='')&&(content.phone==='')) return null;
         const urll=getUrl('',content);
-        let id = this.state.prodSetting.id;
-        console.log(id);
-        fetch('api/products/'+id, {
+        let id = this.state.customerSetting.id;
+        fetch('api/customers/'+id, {
             method: 'put',
             headers: {
                 "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
@@ -68,7 +58,7 @@ export default class ModalEdit extends Component{
         }).then((response) => {
             if (response.status === 200) {
                 this.setState({ showModal: false });
-                this.props.content();
+                this.props.loadData();
             }
         }).catch(function(err) {
           //  if (err) this.setState({ warning: 'block' })
@@ -81,20 +71,20 @@ export default class ModalEdit extends Component{
 
     open(e) {
         let id = e.target.parentElement.parentElement.parentElement.parentElement.dataset.id;
-        fetch('/api/products/'+id)
+        fetch('/api/customers/'+id)
             .then((response) =>{
             response.json()
                 .then((data) =>{
                 console.log(data);
                     this.setState({
                         showModal: true,
-                        prodSetting: {
+                        customerSetting: {
                             id: data.id,
                             name: data.name,
-                            price: data.price
+                            address: data.address,
+                            phone: data.phone
                         }
-                    });
-                    console.log(this.state);
+                    })
                 })
             })
     }
@@ -104,17 +94,21 @@ export default class ModalEdit extends Component{
                 <Button bsStyle="link" onClick={this.open}>edit</Button>
                 <Modal show={this.state.showModal} onHide={this.close}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Edit products</Modal.Title>
+                        <Modal.Title>Edit customers</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <form className="form-inline" name="form1">
                             <div className="form-group" style={{marginRight:30+'px'}}>
                                 <label htmlFor="name">Name</label>
-                                <input defaultValue={this.state.prodSetting.name} type="text" className="form-control" id="name" />
+                                <input defaultValue={this.state.customerSetting.name} type="text" className="form-control" id="name" />
+                            </div>
+                            <div className="form-group" style={{marginRight:30+'px'}}>
+                                <label htmlFor="address">Address</label>
+                                <input defaultValue={this.state.customerSetting.address} type="text" className="form-control" id="address" />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="price">Price</label>
-                                <input defaultValue={this.state.prodSetting.price} type="text" className="form-control" id="price"/>
+                                <label htmlFor="phone">Phone</label>
+                                <input defaultValue={this.state.customerSetting.phone} type="text" className="form-control" id="phone"/>
                             </div>
                         </form>
                         <Alert style={{display: this.state.warning}} bsStyle="danger">
