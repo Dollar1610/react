@@ -28,13 +28,12 @@ export default class Modals extends Component {
             phone: document.getElementById('phone').value
         };
         if ((content.name==='')&&(content.address==='')&&(content.phone)) return null;
-        const urll=getUrl('',content);
         fetch('api/customers?', {
             method: 'post',
             headers: {
                 "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
             },
-            body: urll
+            body: getUrl('',content)
         }).then((response) => {
             if (response.status === 200) {
                 this.close();

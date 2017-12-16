@@ -10,14 +10,16 @@ export default class MenuApp extends Component {
   render() {
   	return (
       <header>
-          <Navbar>
+          <Navbar collapseOnSelect >
               <Navbar.Header>
                   <Navbar.Brand>
                       <a href="#">Invoice App</a>
                   </Navbar.Brand>
+                  <Navbar.Toggle />
               </Navbar.Header>
+              <Navbar.Collapse>
               <Nav>
-                  <IndexLinkContainer  to="/invoiceList" activeClassName="active">
+                  <IndexLinkContainer  to="/invoicesList" activeClassName="active">
                       <NavItem eventKey={1} href="#">
                           Invoices
                       </NavItem>
@@ -33,6 +35,7 @@ export default class MenuApp extends Component {
                        </NavItem>
                   </LinkContainer>
               </Nav>
+              </Navbar.Collapse>
           </Navbar>
       </header>
   );
