@@ -27,13 +27,15 @@ export default class InvoiceList extends Component {
                 response.json()
                     .then((data) => {
                         for (let i = 0; i < data.length; i++) {
+                            console.log(data[i]);
                             invoiceList.push({
                                 id: data[i].id,
-                                customer_id: data[i].customer_id,
+                                customer: data[i].customer_id,
                                 discount: data[i].discount,
                                 total: data[i].total
                             });
                         }
+                        console.log(invoiceList);
                         this.setState({ invoiceList });
                     })
             });
@@ -57,7 +59,7 @@ export default class InvoiceList extends Component {
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Customer_id</th>
+                            <th>Customer</th>
                             <th>Discount</th>
                             <th>Total</th>
                             <th>Options</th>

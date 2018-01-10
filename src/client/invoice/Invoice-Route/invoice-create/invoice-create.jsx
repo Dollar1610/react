@@ -7,6 +7,7 @@ import selectCustomers from './invoice_select_customers';
 import selectProducts from './invoice_select_products';
 import LoadTableData from './load-data';
 import NumberFormat from 'react-number-format';
+import getUrl from '../../../common/getUrl';
 
 export default class InvoiceCreate extends Component {
     constructor(props) {
@@ -26,44 +27,70 @@ export default class InvoiceCreate extends Component {
         this.funcCustomers = this.funcCustomers.bind(this);
         this.funcProducts = this.funcProducts.bind(this);
         this.price = this.price.bind(this);
-        this.changeDiscount =this.changeDiscount.bind(this);
+        this.changeQty =this.changeQty.bind(this);
         this.sendForm = this.sendForm.bind(this);
-        this.nameAutoFocus = true;
+        this.changeState = this.changeState.bind(this);
     }
     componentDidMount() {
         this.loadData();
-        this.nameAutoFocus = false;
+    }
+    changeState(data, total) {
+        let discount = document.querySelector('.form-group #formControlText').value/100;
+        total*=(1-discount);
+        this.setState({
+            dataTable:data,
+            total:total
+        });
     }
     sendForm() {
-        let content
+        let customerId=0;
+        fetch('/api/customers/')
+            .then((response) => {
+                response.json()
+                    .then((data) =>{
+                        for (let i=0;i<data.length;i++) {
+                            if (data[i].name===this.state.valueCustomer) customerId=data[i].id
+                        }
+                    })
+            });
+        let content = {
+            customer_id:customerId,
+            discount:document.getElementById('formControlText').value,
+            total:this.state.total
+        };
+        console.log(content);
+        if ((content.name==='')&&(content.address==='')&&(content.phone)) return null;
+        fetch('/api/invoices?', {
+            method: 'post',
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: getUrl('',content)
+        }).then((response) => {
+            if (response.status === 200) {
+                console.log('boya')
+            }
+    })
     }
-    changeDiscount(e) {
+    changeQty(e) {
         if (e.target.value==='') return null;
         if ((e.target.value!=='')&&(e.target.value)) {
-            let discount_id = e.target.parentElement.parentElement.parentElement.dataset.id;
+            let qtyId = e.target.parentElement.parentElement.parentElement.dataset.id;
             let dataTable=this.state.dataTable;
-            dataTable[discount_id].qty = e.target.value;
+            let discount = document.querySelector('.form-group #formControlText').value/100;
+            dataTable[qtyId].qty = e.target.value;
+            console.log(dataTable[qtyId].qty+' -- '+dataTable[qtyId].price);
             let total=0;
             for (let i=0;i<dataTable.length;i++) {
-                total += dataTable[i].price*(1-dataTable[i].qty/100);
+                    total += dataTable[i].price*dataTable[i].qty;
             }
+            total*=(1-discount);
+            console.log(total);
             this.setState({
                 total:total,
                 dataTable:dataTable
             });
-            console.log('test0');
-            return null;
         }
-            let dataTable = this.state.dataTable ;
-            let discount = document.getElementById('formControlText').value / 100;
-            let total = 0;
-            for (let i = 0; i < dataTable.length; i++) {
-                total += dataTable[i].price
-            }
-            total = total * (1 - discount);
-            this.setState({
-                total: total
-            });
     }
     price(data) {
         let name = this.state.valueProducts.value;
@@ -74,7 +101,6 @@ export default class InvoiceCreate extends Component {
             properties: this.state.customers
         };
         selectCustomers(props);
-        console.log('test1');
         return selectCustomers(props);
     }
 
@@ -83,7 +109,6 @@ export default class InvoiceCreate extends Component {
             properties: this.state.products
         };
         selectProducts(props);
-        console.log('test2');
         return selectProducts(props);
     }
     add(e) {
@@ -97,10 +122,19 @@ export default class InvoiceCreate extends Component {
                         dataTable.push({
                             name: this.state.valueProducts.value,
                             price: this.price(data),
-                            qty: document.getElementById('formControlText').value,
+                            qty: 1,
+                        });
+                        let total = 0;
+                        for (let i = 0; i < dataTable.length; i++) {
+                            total += dataTable[i].price
+                        }
+                        let discount=document.getElementById('formControlText').value/100;
+                        total*=(1-discount);
+                        this.setState({
+                            total: total,
+                            dataTable: dataTable
                         });
                         console.log(this.state.dataTable);
-                        this.changeDiscount(e);
                     });
             });
     }
@@ -164,9 +198,10 @@ render() {
                     <th>Name</th>
                     <th>Price</th>
                     <th>Qty</th>
+                    <th>Option</th>
                 </tr>
                 </thead>
-                <LoadTableData focus={this.nameAutoFocus} discount={this.changeDiscount} data={this.state.dataTable} />
+                <LoadTableData  changeState={this.changeState} qty={this.changeQty} data={this.state.dataTable} />
             </Table>
             <PageHeader>Total:
                 <NumberFormat displayType={'text'} value={this.state.total} decimalSeparator={'.'} decimalScale={2}/>

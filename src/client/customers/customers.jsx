@@ -20,9 +20,8 @@ export default class Customers extends Component {
 
     loadData() {
         const customerList = [];
-        const urll = 'api/customers';
 
-        fetch(urll)
+        fetch('api/customers/')
             .then((response) => {
                 response.json()
                     .then((data) => {
